@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Object.defineProperty实现双向绑定2</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+
+<body>
+    <!--  -->
+    <div class="" id="app"></div>
+
+    <script src="../js/v2.js"></script>
+    <script type="text/javascript">
+        let app = new Vue({
+            el: '#app',
+            template: '<h1>{{title}}$$%{{title}}$$%{{msg}}%<span>{{title}}</span></h1><p>这是测试%{{title}}</p><input type="text" v-model="name">{{name}}<input type="button" value="更改" @click="onChange" />',
+            data: {
+                title: '标题',
+                msg: 'msg',
+                name: '我是茗茗'
+            },
+            methods: {
+                onChange(e) {
+                    this.data['name'] = 'lili';
+                }
+            },
+        });
+    </script>
+</body>
+
+</html>

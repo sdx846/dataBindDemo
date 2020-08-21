@@ -1,16 +1,18 @@
 class Vue {
     constructor(options) {
         this.el = document.querySelector(options.el);
+        this.template=this.el.innerHTML;
         this.data = options.data;
-        this.watchers = [];
+        this.methods=options.methods;
+        this.watchers = [];//内容变动时，可以做的一系列操作集合
         //用于管理watcher的Dep对象
         this.dep = {
             add: (watcher) => {
                 this.watchers.push(watcher)
             },
             notify: (newValue) => {
-                this.watchers.forEach(function (fn) {
-                    fn(newValue)
+                this.watchers.forEach( (fn)=>{
+                    fn.bind(this)(newValue);
                 })
             }
         };
@@ -26,8 +28,8 @@ class Vue {
     initData() {
         let that = this;
         //将解析出来的watcher存入Dep中待用
-        this.dep.add(this.renderInput);
-        // that.dep.add(that.replaceTemplateStrings);
+        // this.dep.add(this.renderInput);
+        that.dep.add(that.replaceTemplateStrings);
 
         Object.keys(that.data).forEach(key => {
             that.observer(that.data, key, that.data[key])
@@ -47,9 +49,9 @@ class Vue {
                 if (value !== newValue) {
                     value = newValue;
                     console.log('Update')
+                    that.el.innerHTML=that.template;
                     //将变动通知给相关的订阅者
                     that.dep.notify(newValue);
-                    // that.replaceTemplateStrings();
                 }
             }
         })
@@ -68,13 +70,24 @@ class Vue {
             if (n.childNodes.length) {
                 stack.push(...n.childNodes);
             }
-            //纯文本节点
+            //纯文本节点数据绑定
             if (n.nodeType === Node.TEXT_NODE) {
                 that.replaceText(n);
             }
-            //表单节点
+            //表单节点数据绑定
             if (n.nodeName === 'INPUT' && n.hasAttribute('v-model')) {
                 that.replaceModel(n);
+            }
+            //监听元素节点绑定的事件
+            if(n.nodeType===Node.ELEMENT_NODE){
+                for(let i=0;i<n.attributes.length;i++){
+                    let key=n.attributes[i].name;
+                    if(key.indexOf('@')===0){
+                        n.addEventListener(key.split("@")[1], function (e) {
+                            that.methods[n.getAttribute(key)].bind(that)(e);
+                        });
+                    }
+                }
             }
         }
     }
@@ -90,11 +103,6 @@ class Vue {
                     this.data[key]
                 );
             });
-        }else{
-            // n.textContent = n.textContent.replace(
-            //     new RegExp(`{{${key}}}`, 'g'),
-            //     this.data[key]
-            // );
         }
     }
     //表单节点的v-model绑定数据
