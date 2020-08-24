@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>自定义vue</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+
+<body>
+  <!--  -->
+  <div class="" id="app">
+    <h3>{{msg}}</h3>
+    <h3>{{count}}</h3>
+    <input type="text" v-model="msg">
+    <input type="text" v-model="count">
+  </div>
+  
+  <script src='../js/dep.js'></script>
+  <script src='../js/watcher.js'></script>
+  <script src='../js/compiler.js'></script>
+  <script src='../js/observer.js'></script>
+  <script src="../js/cusVue.js"></script>
+
+  <script type="text/javascript">
+    let app = new Vue({
+      el: '#app',
+      data: {
+        msg: 'msg',
+        count:'ss',
+        person:{
+            name:'lili'
+        }
+      },
+      methods: {
+
+      },
+    });
+  </script>
+</body>
+
+</html>
