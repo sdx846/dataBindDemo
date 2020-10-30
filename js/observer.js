@@ -15,7 +15,7 @@ class Observer{
     defineReactive(obj,key,val){
         let that=this;
         let dep=new Dep();
-        //如果val是对象，对象的属性也将转换为getter和sette
+        //如果val是对象，对象的属性也将转换为getter和setter
         this.walk(val);
         Object.defineProperty(obj,key,{
             enumerable:true,

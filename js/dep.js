@@ -3,7 +3,7 @@ class Dep{
         //存储所有的观察者
         this.subs=[];
     }
-    //添加观察者
+    //添加观察者watcher对象
     addSub(sub){
         if(sub && sub.update){
             this.subs.push(sub);
